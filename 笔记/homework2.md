@@ -17,7 +17,7 @@ $$\frac {\partial f}{\partial x}=
 \end{bmatrix}
 $$
 
-$$,\text{即}(\frac{\partial f}{\partial x})_{ij}=\frac{\partial f_i}{\partial x_j}$$
+$$ \left ( \frac{\partial f}{\partial x} \right )_{ij}=\frac{\partial f_i}{\partial x_j}$$
 
 ### 1.2 常用的微分预备知识
 
@@ -30,14 +30,15 @@ $$z=Wx,\ z\in\mathbb{R}^n, \ W \in \mathbb{R}^{n\times m}, x\in \mathbb{R}^m$$
 此处可以认为$z$是将$x$从$m$维向量，映射为$n$维向量的一个函数，因此Jacobian矩阵为$n\times m $维。
 
 $$z_i = \sum_{k=1}^m w_{ik}x_k$$
-故$$(\frac{\partial z}{\partial x})_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^mw_{ik}\frac{\partial x_k}{\partial x_j}=W_{ij}$$
+故$${\frac{\partial z}{\partial x}}_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^mw_{ik}\frac{\partial x_k}{\partial x_j}=W_{ij}$$
 因此 $\frac{\partial z}{\partial x} = W.$
 
 (2) 行向量$\times$矩阵，再关于行向量求导:
 $$z=xW, z^T\in \mathbb{R}^n, x^T\in \mathbb{R}^m, W\in \mathbb{R}^{m\times n}$$
 
 其中$$z_i = \sum_{k=1}^m x_k w_{ki}$$
-故$$(\frac{\partial z}{\partial x})_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^mw_{ki}\frac{\partial x_k}{\partial x_j}=W_{ji}$$
+故$$\left (\frac{\partial z}{\partial x}\right)_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^mw_{ki}\frac{\partial x_k}{\partial x_j}=W_{ji}$$
+\
 因此 $\frac{\partial z}{\partial x} = W^T.$
 
 (3) 向量关于自身的导数。
@@ -66,7 +67,7 @@ $$\frac{\partial J}{\partial W}=x^T\delta.$$
 
 
 (7) 交叉熵关于logit的微商。
-$$\begin{aligned} \hat{y} & =softmax(\theta)\\
+$$\begin{align} \hat{y} & =softmax(\theta)\\
 J & = CE(\theta),\\
 & \text{需要计算} \frac{\partial J}{\partial \theta}.
-\end{aligned}$$
+\end{align}$$
