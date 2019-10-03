@@ -36,7 +36,7 @@ $$z=Wx,\ z\in\mathbb{R}^n, \ W \in \mathbb{R}^{n\times m}, x\in \mathbb{R}^m$$
 
 $$z_i = \sum_{k=1}^m w_{ik}x_k$$
 
-$$\left ( \frac{\partial z}{\partial x} \right )_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^mw_{ik}\frac{\partial x_k}{\partial x_j}=W_{ij}$$
+$$\left ( \frac{\partial z}{\partial x} \right )_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^m w_{ik}\frac{\partial x_k}{\partial x_j}=W_{ij}$$
 
 因此 $\frac{\partial z}{\partial x} = W.$
 
@@ -115,3 +115,18 @@ $$\begin{aligned}
 \frac{\partial J}{\partial b_1} & = \frac{\partial J}{\partial \theta}\frac{\partial z}{\partial b_1}=\delta_2\frac{\partial z}{\partial b_1}=\delta_2^T\\
 \frac{\partial J}{\partial x} & = \frac{\partial J}{\theta}\frac{\partial z}{\partial x}=W^T\delta_2^T
 \end{aligned}$$
+
+## 2. Assignment 2
+
+题目截图如下:
+![](../img/2-1.png)
+
+![](../img/2-2.png)
+
+(a) 由于真实的$y$是一个one-hot变量，只有命中的时候该求和项才有值，故当$y_w=1$时，故$-\sum_{\omega \in V_{ocab}} y_{\omega}log(\hat y_{\omega})=-log(\hat {y_o})$
+
+![](../img/2-3.png)
+
+(b) 上述损失函数即交叉熵函数 $J=CE(y,\hat y), \hat y = softmax(\theta)$
+
+$$\frac{\partial J}{\partial v_c}=\frac{\partial J}{\partial \theta}\frac{\partial \theta}{\partial v_c}=(\hat{y}-y)^T\frac{\partial U^Tv_c}{\partial v_c}=$$
