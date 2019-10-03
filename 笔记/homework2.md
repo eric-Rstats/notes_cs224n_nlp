@@ -36,7 +36,7 @@ $$z=Wx,\ z\in\mathbb{R}^n, \ W \in \mathbb{R}^{n\times m}, x\in \mathbb{R}^m$$
 
 $$z_i = \sum_{k=1}^m w_{ik}x_k$$
 
-$$(\frac{\partial z}{\partial x})_{ij}=\frac{\partial z_i}{\partial x_j}=\frac{\partial x_k}{\partial x_j}=W_ij$$
+$$\left ( \frac{\partial z}{\partial x} \right )_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^m w_{ik}\frac{\partial x_k}{\partial x_j}=W_ij$$
 
 因此 $\frac{\partial z}{\partial x} = W.$
 
