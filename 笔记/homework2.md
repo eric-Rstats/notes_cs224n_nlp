@@ -37,12 +37,10 @@ $$z_i = \sum_{k=1}^m w_{ik}x_k$$
 $$z=xW, z^T\in \mathbb{R}^n, x^T\in \mathbb{R}^m, W\in \mathbb{R}^{m\times n}$$
 
 其中$$z_i = \sum_{k=1}^m x_k w_{ki}$$
-<<<<<<< HEAD
+
 故$$\left (\frac{\partial z}{\partial x}\right)_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^mw_{ki}\frac{\partial x_k}{\partial x_j}=W_{ji}$$
-\
-=======
-故$$(\frac{\partial z}{\partial x})_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^mw_{ki}\frac{\partial x_k}{\partial x_j}=W_{ji}$$\
->>>>>>> 11fc124783c8385c7c7b70108f023754442553cd
+
+
 因此 $\frac{\partial z}{\partial x} = W^T.$
 
 (3) 向量关于自身的导数。
