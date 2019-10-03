@@ -2,6 +2,11 @@
  
 # Homework2 Solutions
 
+> 注：如下的定义中，矩阵微分都是采用了`numerator layout notation`,比如一个sclar关于列向量的微分是一个行向量……
+> 具体查看[wiki](https://en.wikipedia.org/wiki/Matrix_calculus)
+
+
+
 ## 1. 补充材料学习: 矩阵微商的知识
 
 ### 1.1 微商的向量化
@@ -30,7 +35,9 @@ $$z=Wx,\ z\in\mathbb{R}^n, \ W \in \mathbb{R}^{n\times m}, x\in \mathbb{R}^m$$
 此处可以认为$z$是将$x$从$m$维向量，映射为$n$维向量的一个函数，因此Jacobian矩阵为$n\times m $维。
 
 $$z_i = \sum_{k=1}^m w_{ik}x_k$$
-故$${\frac{\partial z}{\partial x}}_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^mw_{ik}\frac{\partial x_k}{\partial x_j}=W_{ij}$$
+
+$$\left ( \frac{\partial z}{\partial x} \right )_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^mw_{ik}\frac{\partial x_k}{\partial x_j}=W_{ij}$$
+
 因此 $\frac{\partial z}{\partial x} = W.$
 
 (2) 行向量$\times$矩阵，再关于行向量求导:
@@ -38,7 +45,7 @@ $$z=xW, z^T\in \mathbb{R}^n, x^T\in \mathbb{R}^m, W\in \mathbb{R}^{m\times n}$$
 
 其中$$z_i = \sum_{k=1}^m x_k w_{ki}$$
 
-故$$\left (\frac{\partial z}{\partial x}\right)_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^mw_{ki}\frac{\partial x_k}{\partial x_j}=W_{ji}$$
+$$\left (\frac{\partial z}{\partial x}\right)_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^mw_{ki}\frac{\partial x_k}{\partial x_j}=W_{ji}$$
 
 
 因此 $\frac{\partial z}{\partial x} = W^T.$
@@ -69,7 +76,42 @@ $$\frac{\partial J}{\partial W}=x^T\delta.$$
 
 
 (7) 交叉熵关于logit的微商。
-$$\begin{align} \hat{y} & =softmax(\theta)\\
+$$\begin{aligned} \hat{y} & =softmax(\theta)\\
 J & = CE(\theta),\\
-& \text{需要计算} \frac{\partial J}{\partial \theta}.
-\end{align}$$
+\frac{\partial J}{\partial \theta}  & = (\hat{y}-y)^T
+\end{aligned}$$
+
+
+### 1.3 Gradient Layout
+使用Jacobian矩阵很方便，但是我们在后向传播的时候，更倾向于将梯度的维度与该参数保持一致。
+
+
+### 1.4 一层神经网络的反向传播推导
+
+$$x=input$$
+$$z=Wx+b_1$$
+$$h=ReLU(z)$$
+$$\theta=Uh+b_2$$
+$$\hat{y}=softmax(\theta)$$
+$$J=CE(y,\hat{y})$$
+
+其中$x\in\mathbb{R}^{D_x\times 1}, b_1\in \mathbb{R}^{D_h\times1},W\in \mathbb{R}^{D_h\times D_x},b_2\in \mathbb{R}^{N_c\times 1},U\in\mathbb{R}^{N_c\times D_h}$,即$D_x$为输入维度，$D_h$为单隐层神经元个数,$N_c$是分类个数。
+
+$$
+\begin{aligned}
+\frac{\partial J}{\partial U} & = \frac{\partial J}{\partial \hat y}\frac{\partial \hat y}{\partial \theta}\frac{\partial \theta}{\partial U}\\
+\frac{\partial J}{\partial b_2} & = \frac{\partial J}{\partial \hat y}\frac{\partial \hat y}{\partial \theta}\frac{\partial \theta}{\partial b_2}
+\end{aligned}$$
+令
+$$\delta_1=\frac{\partial J}{\partial\theta}=(\hat{y}-y)^T$$
+$$\delta_2=\frac{\partial J}{\partial z}=\frac{\partial J}{\partial \theta}\frac{\partial \theta}{\partial h}\frac{\partial h}{\partial z}=\delta_1 U \circ sgn(h)$$
+
+因此,如下微商计算的时候，为了更新梯度方便，将最终计算好的微分转置为同当前参数的shape相同。
+
+$$\begin{aligned}
+\frac{\partial J}{\partial U} & = \delta_1^Th^T \\
+\frac{\partial J}{\partial b_2} & = \frac{\partial J}{\partial \theta}\frac{\partial \theta}{\partial b_2}=\delta_1^T \\
+\frac{\partial J}{\partial W} & = \frac{\partial J}{\partial z}\frac{\partial z}{\partial W}=\delta_2^Tx^T\\
+\frac{\partial J}{\partial b_1} & = \frac{\partial J}{\partial \theta}\frac{\partial z}{\partial b_1}=\delta_2\frac{\partial z}{\partial b_1}=\delta_2^T\\
+\frac{\partial J}{\partial x} & = \frac{\partial J}{\theta}\frac{\partial z}{\partial x}=W^T\delta_2^T
+\end{aligned}$$
