@@ -36,7 +36,8 @@ $$z=Wx,\ z\in\mathbb{R}^n, \ W \in \mathbb{R}^{n\times m}, x\in \mathbb{R}^m$$
 
 $$z_i = \sum_{k=1}^m w_{ik}x_k$$
 
-$$\left ( \frac{\partial z}{\partial x} \right )_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^m w_{ik}\frac{\partial x_k}{\partial x_j}=W_{ij}$$
+![](../img/1-1.png)
+
 因此 $\frac{\partial z}{\partial x} = W.$
 
 (2) 行向量$\times$矩阵，再关于行向量求导:
@@ -44,7 +45,7 @@ $$z=xW, z^T\in \mathbb{R}^n, x^T\in \mathbb{R}^m, W\in \mathbb{R}^{m\times n}$$
 
 其中$$z_i = \sum_{k=1}^m x_k w_{ki}$$
 
-$$\left (\frac{\partial z}{\partial x}\right)_{ij}=\frac{\partial z_i}{\partial x_j}=\sum_{k=1}^m {w_{ki}}\frac{\partial x_k}{\partial x_j}=W_{ji}$$
+![](../img/1-2.png)
 
 
 因此 $\frac{\partial z}{\partial x} = W^T.$
