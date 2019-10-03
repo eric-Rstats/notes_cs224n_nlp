@@ -22,7 +22,7 @@ $$\frac {\partial f}{\partial x}=
 \end{bmatrix}
 $$
 
-$$ \left ( \frac{\partial f}{\partial x} \right )_{ij}=\frac{\partial f_i}{\partial x_j}$$
+$$ \left( \frac{\partial f}{\partial x} \right)_{ij}=\frac{\partial f_i}{\partial x_j}$$
 
 ### 1.2 常用的微分预备知识
 
