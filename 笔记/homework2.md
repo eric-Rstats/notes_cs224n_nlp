@@ -1,5 +1,5 @@
-[toc]
- 
+[TOC]
+
 # Homework2 Solutions
 
 > 注：如下的定义中，矩阵微分都是采用了`numerator layout notation`,比如一个sclar关于列向量的微分是一个行向量……
@@ -21,7 +21,6 @@ $$\frac {\partial f}{\partial x}=
  \frac{\partial f_n}{\partial x_1}& \cdots & \frac{\partial f_m}{\partial x_n}
 \end{bmatrix}
 $$
-
 $$ \left( \frac{\partial f}{\partial x} \right)_{ij}=\frac{\partial f_i}{\partial x_j}$$
 
 ### 1.2 常用的微分预备知识
@@ -96,7 +95,6 @@ $$\hat{y}=softmax(\theta)$$
 $$J=CE(y,\hat{y})$$
 
 其中$x\in\mathbb{R}^{D_x\times 1}, b_1\in \mathbb{R}^{D_h\times1},W\in \mathbb{R}^{D_h\times D_x},b_2\in \mathbb{R}^{N_c\times 1},U\in\mathbb{R}^{N_c\times D_h}$,即$D_x$为输入维度，$D_h$为单隐层神经元个数,$N_c$是分类个数。
-
 $$
 \begin{aligned}
 \frac{\partial J}{\partial U} & = \frac{\partial J}{\partial \hat y}\frac{\partial \hat y}{\partial \theta}\frac{\partial \theta}{\partial U}\\
@@ -118,15 +116,59 @@ $$\begin{aligned}
 
 ## 2. Assignment 2
 
+
+### 2.1 written part
 题目截图如下:
 ![](../img/2-1.png)
 
 ![](../img/2-2.png)
 
-(a) 由于真实的$y$是一个one-hot变量，只有命中的时候该求和项才有值，故当$y_w=1$时，故$-\sum_{\omega \in V_{ocab}} y_{\omega}log(\hat y_{\omega})=-log(\hat {y_o})$
+(a) 由于真实的$y$是由0，1组成，只有命中的时候该求和项才有值，故当$y_w=1$时，故$-\sum_{\omega \in V_{ocab}} y_{\omega}log(\hat y_{\omega})=-log(\hat {y_o})$
 
 ![](../img/2-3.png)
 
 (b) 上述损失函数即交叉熵函数 $J=CE(y,\hat y), \hat y = softmax(\theta)$
 
-$$\frac{\partial J}{\partial v_c}=\frac{\partial J}{\partial \theta}\frac{\partial \theta}{\partial v_c}=(\hat{y}-y)^T\frac{\partial U^Tv_c}{\partial v_c}=$$
+
+$$\frac{\partial J}{\partial v_c}=\frac{\partial J}{\partial \theta}\frac{\partial \theta}{\partial v_c}=(\hat{y}-y)\frac{\partial U^Tv_c}{\partial v_c}=U^T(\hat y - y)$$
+
+(c) 
+$$\frac{\partial J}{\partial u_o}=\frac{\partial J}{\partial \theta}\frac{\partial \theta}{\partial v_c}=(\hat y - y)v_c^T$$
+
+(d) $$\sigma(x)=\frac{e^x}{e^x+1}$$
+考虑到此处sigmoid函数向量，实际是一个列向量
+$$\frac{\partial \sigma}{\partial x}=\frac{diag(e^x)}{(e^x+1)^T(e^x+1)}=diag(\sigma(x(1-\sigma(x))))$$
+
+![](../img/2-4.png)
+
+(e) $$J_{neg-sample}(v_c, o, U)=-log(\sigma(\boldsymbol{u_o^T}\boldsymbol{v_c}))-\sum_{k=1}^K log(\sigma(-\boldsymbol{u_k^T}\boldsymbol{v_c}))$$
+对于
+$$\begin{aligned}
+\frac{\partial J}{\partial \boldsymbol{v_c}}  & = [\sigma(\boldsymbol{u_o^T\boldsymbol{v_c}})-1]\boldsymbol{u_o}-\sum_{k=1}^K[\sigma(\boldsymbol{-u_k^T\boldsymbol{v_c}})-1]\boldsymbol{u_k} \\ 
+& =  [\sigma(\boldsymbol{u_o^T\boldsymbol{v_c}})-1]\boldsymbol{u_o} +\sum_{k=1}^K(\sigma(\boldsymbol{u_k^T\boldsymbol{v_c}})\boldsymbol{u_k}
+\end{aligned}$$
+
+当$W=o$时:
+$$ \frac{\partial J}{\partial \boldsymbol{u_o}}  =[\sigma(\boldsymbol{u_o^T\boldsymbol{v_c}})-1]\boldsymbol{v_c} = \sigma(\boldsymbol{-u_o^T\boldsymbol{v_c}})\boldsymbol{v_c}$$
+当$W=k$时:
+$$ \frac{\partial J}{\partial \boldsymbol{u_k}} =[\sigma(\boldsymbol{-u_k^T\boldsymbol{v_c}})-1]\boldsymbol{v_c}=\sigma(\boldsymbol{u_k^T}\boldsymbol{v_c})\boldsymbol{v_c} $$
+
+
+从上述计算结果可以看出来，neg-sample的方式，在计算的时候不需要去整个Y，只需要着眼于K维的矩阵计算，K是采样的大小。
+
+![](../img/2-5.png)
+(e) $$\frac{\partial J_{skip-gram}(\boldsymbol{v_c},w_{t-m},\ldots,w_{t+m}, U)}{\partial U}=\sum_{\underset{j\neq0}{-m\leq j \leq m}} \frac{\partial J(\boldsymbol{v_c}, w_{t+j}, U)}{\partial U}$$
+
+$$\frac{\partial J_{skip-gram}(\boldsymbol{v_c},w_{t-m},\ldots,w_{t+m}, U)}{\partial \boldsymbol{v_c}}=\sum_{\underset{j\neq0}{-m\leq j \leq m}} \frac{\partial J(\boldsymbol{v_c}, w_{t+j}, U)}{\partial \boldsymbol{v_c}}$$
+
+$$\frac{\partial J_{skip-gram}(\boldsymbol{v_c},w_{t-m},\ldots,w_{t+m}, U)}{\partial \boldsymbol{v_w}}=0$$
+
+### 2.2 代码部分
+
+注意此处outside vectors每一行是一个words的词向量，即假设存在$n_o$个outside vectors时，outsideVectors的维度为$n_o \times p$.代码中outside_index会记录window_size内某一个outside vector的索引。对于上文所述的推导，对于某一个outside word进行推导，代码中使用SGD不断迭代。
+
+![](../homework/a2/word_vectors.png)
+
+## Reference
+[1] [looperxx的笔记](https://looperxx.github.io/CS224n-2019-Assignment/)
+
